@@ -1,5 +1,7 @@
 python_azure_translate_api
 ==========================
+(Ported to Python3)
+
 Python module for Microsoft Translator API
 
 Published under BEERWARE LICENSE.
