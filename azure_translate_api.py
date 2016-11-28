@@ -18,8 +18,9 @@ import math
 import json
 import retry
 import time
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import requests
 
 
 SCOPE_URL='http://api.microsofttranslator.com'
@@ -51,7 +52,7 @@ class MicrosoftTranslatorClient(object):
       'scope': SCOPE_URL,
       'grant_type': GRANT_CLIENT_CREDENTIALS_ONLY
     }
-    self.auth_token = json.loads(urllib2.urlopen(OAUTH_URL,data=urllib.urlencode(auth_args)).read())
+    self.auth_token = requests.post('https://datamarket.accesscontrol.windows.net/v2/OAuth2-13', data=auth_args).json()
     if self.auth_token:
       self.last_auth_token_refresh = datetime.datetime.now()
       return self.auth_token
@@ -90,6 +91,6 @@ class MicrosoftTranslatorClient(object):
     headers = {
       'Authorization': 'Bearer '+ self.auth_token['access_token']
     }
-    translate_req = urllib2.Request(AZURE_TRANSLATE_API_URL % urllib.urlencode(translate_packet),
+    translate_req = urllib.request.Request(AZURE_TRANSLATE_API_URL % urllib.parse.urlencode(translate_packet),
                                     headers=headers)
-    return urllib2.urlopen(translate_req).read()
+    return str(urllib.request.urlopen(translate_req).read(),'utf-8')
